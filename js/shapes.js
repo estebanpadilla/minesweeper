@@ -12,6 +12,16 @@ function Box(position, width, height, color, context) {
     this.text = '';
     this.font = '20px Lato';
     this.isCell = true;
+    this.showMine = false;
+}
+
+Box.prototype.reset = function reset() {
+    this.context.clearRect(this.position.x, this.position.y, this.width, this.height);
+
+    this.color = '#f3f5f5';
+    this.text = '';
+    this.showMine = false;
+    this.update();
 }
 
 Box.prototype.update = function update() {
@@ -34,7 +44,45 @@ Box.prototype.render = function render() {
         this.context.textAlign = 'right';
         this.context.fillText(this.text, (this.position.x + 120), (this.position.y + 62));
     }
-    //this.context.fill();
+
+    if (this.showMine) {
+
+        this.context.fillStyle = '#473153';
+        this.context.arc((this.position.x + this.width / 2), (this.position.y + this.height / 2), 8, 0, (Math.PI * 2), false);
+        this.context.fill();
+
+        this.context.lineWidth = 2;
+        this.context.lineCap = 'round';
+
+        this.context.strokeStyle = '#473153';
+        this.context.beginPath();
+        this.context.moveTo(this.position.x + 8, this.position.y + this.height / 2);
+        this.context.lineTo(this.position.x + (this.width - 8), this.position.y + this.height / 2);
+        this.context.stroke();
+        this.context.closePath();
+
+        this.context.beginPath();
+        this.context.moveTo(this.position.x + (this.width / 2), this.position.y + 8);
+        this.context.lineTo(this.position.x + (this.width / 2), this.position.y + (this.height - 8));
+        this.context.stroke();
+        this.context.closePath();
+
+        this.context.beginPath();
+        this.context.moveTo(this.position.x + 13, this.position.y + 13);
+        this.context.lineTo(this.position.x + (this.width - 13), this.position.y + (this.height - 13));
+        this.context.stroke();
+        this.context.closePath();
+
+        this.context.beginPath();
+        this.context.moveTo(this.position.x + (this.width - 13), this.position.y + 13);
+        this.context.lineTo(this.position.x + 13, this.position.y + (this.height - 13));
+        this.context.stroke();
+        this.context.closePath();
+
+        this.context.fillStyle = 'white';
+        this.context.arc((this.position.x + 17), (this.position.y + 17), 2, 0, (Math.PI * 2), false);
+        this.context.fill();
+    }
 }
 
 function Line(a, b, width, color, context) {
@@ -81,6 +129,7 @@ Face.prototype.render = function render() {
     this.context.stroke();
 
     if (this.isHappy) {
+        //Draw happy face
         this.context.beginPath();
         this.context.fillStyle = 'black';
         this.context.arc((this.position.x - 10), (this.position.y - 7), 5, 0, Math.PI * 2, false);
@@ -99,7 +148,7 @@ Face.prototype.render = function render() {
         this.context.stroke();
 
     } else {
-
+        //Draw sad face
         this.context.beginPath();
         this.context.lineWidth = 3;
         this.context.lineCap = 'round';

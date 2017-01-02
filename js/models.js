@@ -10,14 +10,18 @@ function Cell(id, box, gameOverListener) {
     this.south_east = undefined;
     this.isMine = false;
     this.mineCounter = 0;
+    this.inMineCounterSet = false;
     this.box = box;
-    this.isActavited = false;
+    this.isClear = false;
     this.gameOverListener = gameOverListener;
 }
 
-Cell.prototype.activate = function activate() {
+Cell.prototype.reset = function reset() {
+    this.isClear = false;
+    this.box.reset();
+}
 
-    console.log(this.id);
+Cell.prototype.activate = function activate() {
 
     if (this.isMine) {
         this.box.color = '#ee3344';
@@ -26,56 +30,59 @@ Cell.prototype.activate = function activate() {
         return;
     }
 
-    if (this.isActavited) {
+    if (this.isClear) {
         return;
     }
 
-    this.isActavited = true;
+    this.isClear = true;
 
-    if (this.north) {
-        if (this.north.isMine) {
-            this.mineCounter++;
+    if (!this.inMineCounterSet) {
+        if (this.north) {
+            if (this.north.isMine) {
+                this.mineCounter++;
+            }
         }
-    }
-    if (this.south) {
-        if (this.south.isMine) {
-            this.mineCounter++;
+        if (this.south) {
+            if (this.south.isMine) {
+                this.mineCounter++;
+            }
         }
-    }
 
-    if (this.east) {
-        if (this.east.isMine) {
-            this.mineCounter++;
+        if (this.east) {
+            if (this.east.isMine) {
+                this.mineCounter++;
+            }
         }
-    }
 
-    if (this.west) {
-        if (this.west.isMine) {
-            this.mineCounter++;
+        if (this.west) {
+            if (this.west.isMine) {
+                this.mineCounter++;
+            }
         }
-    }
 
-    if (this.north_east) {
-        if (this.north_east.isMine) {
-            this.mineCounter++;
+        if (this.north_east) {
+            if (this.north_east.isMine) {
+                this.mineCounter++;
+            }
         }
-    }
 
-    if (this.north_west) {
-        if (this.north_west.isMine) {
-            this.mineCounter++;
+        if (this.north_west) {
+            if (this.north_west.isMine) {
+                this.mineCounter++;
+            }
         }
-    }
 
-    if (this.south_east) {
-        if (this.south_east.isMine) {
-            this.mineCounter++;
+        if (this.south_east) {
+            if (this.south_east.isMine) {
+                this.mineCounter++;
+            }
         }
-    }
-    if (this.south_west) {
-        if (this.south_west.isMine) {
-            this.mineCounter++;
+        if (this.south_west) {
+            if (this.south_west.isMine) {
+                this.mineCounter++;
+            }
         }
+        this.inMineCounterSet = true;
     }
 
     if (this.mineCounter > 0) {
@@ -85,7 +92,7 @@ Cell.prototype.activate = function activate() {
     this.box.color = '#ddf1f9';
     this.box.update();
 
-    if (this.mineCounter < 2) {
+    if (this.mineCounter < 1) {
         if (this.north) {
             if (!this.north.isMine) {
                 this.north.activate();
@@ -136,7 +143,7 @@ Cell.prototype.activate = function activate() {
 
 Cell.prototype.explote = function explote() {
     if (this.isMine) {
-        this.box.color = '#ee3344';
+        this.box.showMine = true;
         this.box.update();
     }
 }
