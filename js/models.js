@@ -1,4 +1,4 @@
-function Cell(id, box) {
+function Cell(id, box, gameOverListener) {
     this.id = id;
     this.north = undefined;
     this.south = undefined;
@@ -12,6 +12,7 @@ function Cell(id, box) {
     this.mineCounter = 0;
     this.box = box;
     this.isActavited = false;
+    this.gameOverListener = gameOverListener;
 }
 
 Cell.prototype.activate = function activate() {
@@ -19,9 +20,9 @@ Cell.prototype.activate = function activate() {
     console.log(this.id);
 
     if (this.isMine) {
-        console.log("GAME OVER");
         this.box.color = '#ee3344';
         this.box.update();
+        this.gameOverListener();
         return;
     }
 
@@ -130,5 +131,12 @@ Cell.prototype.activate = function activate() {
                 this.south_west.activate();
             }
         }
+    }
+}
+
+Cell.prototype.explote = function explote() {
+    if (this.isMine) {
+        this.box.color = '#ee3344';
+        this.box.update();
     }
 }
