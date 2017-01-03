@@ -23,9 +23,10 @@ function initGame() {
     var width = 440;
     var height = 540;
     var isGameStarted = false;
-    var isGamePaused = false;
+    // var isGamePaused = false;
     var isGameOver = false;
     var isGameComplete = false;
+    var isTimerOn = false;
 
     canvas = createCanvas(x, y, width, height);
     context = canvas.getContext('2d');
@@ -34,7 +35,7 @@ function initGame() {
     function createUI() {
 
         y = height + 30;
-        actionBtn = createActionButton(x, y, width, 50);
+        actionBtn = createActionButton(210, 50, 60, 60);
         actionBtn.addEventListener('click', actionBtnHandler, false);
 
         x = 20;
@@ -149,17 +150,6 @@ function initGame() {
         if (!isGameStarted) {
             startGame();
         }
-
-        if (isGamePaused) {
-            resumeGame();
-        } else {
-            pauseGame();
-        }
-
-        if (isGameOver) {
-            startGame();
-        }
-
     }
 
     //Timer event handler.
@@ -170,6 +160,12 @@ function initGame() {
     }
 
     function clickOnCellHandler(e) {
+
+        if (!isTimerOn) {
+            isTimerOn = true;
+            timerId = setInterval(gameTimerHandler, 1000);
+        }
+
         findCellByPosition(e.layerX, e.layerY);
     }
 
@@ -193,70 +189,64 @@ function initGame() {
     //GAME LOGIG METHODS
     function startGame() {
 
-        if (isGameOver) {
+        if (isGameOver || isGameComplete) {
             resetMap();
         }
 
         scoreBg.text = '' + minesQty;
         scoreBg.update();
 
-        actionBtn.innerHTML = 'Pause Game';
-        actionBtn.className = 'buttonPause';
         canvas.addEventListener('click', clickOnCellHandler, false);
-        timerId = setInterval(gameTimerHandler, 1000);
-        isGamePaused = false;
+
+        // isGamePaused = false;
         isGameStarted = true;
         isGameComplete = false;
-    }
-
-    function resumeGame() {
-        actionBtn.innerHTML = 'Pause Game';
-        actionBtn.className = 'buttonPause';
-        canvas.addEventListener('click', clickOnCellHandler, false);
-        timerId = setInterval(gameTimerHandler, 1000);
-        isGamePaused = false;
-        isGameStarted = true;
-        isGameComplete = false;
-    }
-
-    function pauseGame() {
-        isGamePaused = true;
-        actionBtn.innerHTML = 'Play';
-        actionBtn.className = 'buttonPlay';
-        //Remove event listeners.
-        canvas.removeEventListener('click', clickOnCellHandler, false);
-        //Clear timer.
-        clearInterval(timerId);
     }
 
     function gameOver() {
 
         isGameStarted = false;
-        isGamePaused = false;
+        isGameComplete = false;
         isGameOver = true;
 
-        if (isGameComplete) {
-            actionBtn.innerHTML = 'You Win, Play Again?';
-            actionBtn.className = 'buttonWin';
-        } else {
-            actionBtn.innerHTML = 'Play Again';
-            actionBtn.className = 'buttonOver';
-
-            //Set a sad face.    
-            face.isHappy = false;
-            face.update();
-        }
+        face.isHappy = false;
+        face.update();
 
         //Remove event listeners.
         canvas.removeEventListener('click', clickOnCellHandler, false);
 
         //Clear timer.
+        isTimerOn = false;
         clearInterval(timerId);
 
         //Show all mines in grid.
         cells.forEach(function (cell) {
             cell.explote();
         }, this);
+    }
+
+    function gameCompleted() {
+
+        isGameComplete = true;
+        isGameStarted = false;
+        isGameOver = false;
+
+        face.isHappy = false;
+        face.isSuperHappy = true;
+        face.update();
+
+        //Remove event listeners.
+        canvas.removeEventListener('click', clickOnCellHandler, false);
+
+        //Clear timer.
+        isTimerOn = false;
+        clearInterval(timerId);
+
+        //Show all mines in grid.
+        cells.forEach(function (cell) {
+            cell.showFlag();
+        }, this);
+
     }
 
     function checkAllMinesSweeped() {
@@ -274,7 +264,7 @@ function initGame() {
         if (totalClearableCells == totalClearedCells) {
             console.log('Game COMPLETE');
             isGameComplete = true;
-            gameOver();
+            gameCompleted();
         }
     }
 
@@ -284,6 +274,7 @@ function initGame() {
         timerBg.update();
         face.isHappy = true;
         face.update();
+
         cells.forEach(function (cell) {
             cell.reset();
         }, this);
@@ -373,13 +364,14 @@ function createCanvas(x, y, width, height) {
 
 function createActionButton(x, y, width, height) {
     var button = document.createElement('button');
-    button.className = 'buttonPlay';
+    button.className = 'button';
     button.setAttribute('type', 'button');
     button.style.position = 'absolute';
     button.style.left = '' + x + 'px';
     button.style.top = '' + y + 'px';
     button.style.width = '' + width + 'px';
-    button.innerHTML = 'Play';
+    button.style.height = '' + height + 'px';
+    //button.innerHTML = 'Play';
     document.body.appendChild(button);
     return button;
 }

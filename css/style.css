@@ -8,32 +8,11 @@ html, body {
     background: #f3f5f5;
 }
 
-.buttonPlay {
-    background-color:#1796ac;
-}
-
-.buttonPause {
-    background-color: #126e77;
-}
-
-.buttonOver {
-    background-color: #ee3344;
-}
-.buttonWin {
-    background-color:#1796ac;
-}
-
-.buttonPlay, .buttonPause, .buttonOver, .buttonWin {
+.button {
     border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
+    color: transparent;
+    background: transparent;
     text-decoration: none;
     display: inline-block;
-    font-size: 20px;
-    margin: 4px 2px;
     cursor: pointer;
-}
-.buttonPlay:hover, .buttonPause:hover, .buttonOver:hover, .buttonWin:hover {
-    color: yellow;
 }

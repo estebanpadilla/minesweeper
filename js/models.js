@@ -144,6 +144,15 @@ Cell.prototype.activate = function activate() {
 Cell.prototype.explote = function explote() {
     if (this.isMine) {
         this.box.showMine = true;
+        this.box.showFlag = false;
+        this.box.update();
+    }
+}
+
+Cell.prototype.showFlag = function showFlag() {
+    if (this.isMine) {
+        this.box.showMine = false;
+        this.box.showFlag = true;
         this.box.update();
     }
 }
