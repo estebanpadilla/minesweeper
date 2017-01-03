@@ -5,6 +5,7 @@ function initGame() {
     var timerId = 0;
     var cells = [];
     var mapData = [];
+    var mapName = './maps/map1.jpg';
     var pool = [];
     var lines = [];
     var cols = 10;
@@ -16,6 +17,7 @@ function initGame() {
     var face = undefined;
     var timerBg = undefined;
     var actionBtn = undefined;
+
     var x = 20;
     var y = 20;
     var width = 440;
@@ -28,14 +30,7 @@ function initGame() {
     canvas = createCanvas(x, y, width, height);
     context = canvas.getContext('2d');
 
-    function actionBtnHandler(e) {
-        if (!isGameStarted || isGamePaused) {
-            startGame();
-        } else {
-            pauseGame();
-        }
-    }
-
+    //CREATION METHODS
     function createUI() {
 
         y = height + 30;
@@ -89,7 +84,7 @@ function initGame() {
             }
         }
 
-        //Set cells relationships
+        //Set cells relationships.
         for (var i = 0; i < cells.length; i++) {
             setNort(cells[i]);
             setSouth(cells[i]);
@@ -102,6 +97,7 @@ function initGame() {
         }
     }
 
+    //Create grid lines.
     function createGridLines() {
         //Draw grid lines.
         y = 120;
@@ -120,11 +116,60 @@ function initGame() {
         }
     }
 
+    //Loads map from image.
+    function loadMapData() {
+        var map = new Image();
+        map.src = mapName;
+        map.onload = function () {
+            context.drawImage(map, 0, 0, 10, 10);
+            map.style.display = 'none';
+            var mapImageData = context.getImageData(0, 0, 10, 10);
+            console.log(map);
+            console.log(mapImageData);
+
+            for (var i = 0; i < mapImageData.data.length; i += 4) {
+                //Read the first pixel and checks the value is close to 0.
+                if (mapImageData.data[i] < 10) {
+                    console.log('Pixel ' + (i / 4) + ' is mine');
+                    mapData.push(1);
+                } else {
+                    mapData.push(0);
+                }
+            }
+            createCells();
+        };
+    }
+
     loadMapData();
     createUI();
     createGridLines();
 
+    //EVENT HANDLERS
     //Click on cell event handler.
+    function actionBtnHandler(e) {
+        if (!isGameStarted) {
+            startGame();
+        }
+
+        if (isGamePaused) {
+            resumeGame();
+        } else {
+            pauseGame();
+        }
+
+        if (isGameOver) {
+            startGame();
+        }
+
+    }
+
+    //Timer event handler.
+    function gameTimerHandler() {
+        gametime++;
+        timerBg.text = '' + gametime;
+        timerBg.update();
+    }
+
     function clickOnCellHandler(e) {
         findCellByPosition(e.layerX, e.layerY);
     }
@@ -142,16 +187,11 @@ function initGame() {
     function activateCell(id) {
         var cell = cells[id];
         cell.activate();
-        checkGameWon();
+        checkAllMinesSweeped();
     }
 
-    //Timer event handler.
-    function gameTimerHandler() {
-        gametime++;
-        timerBg.text = '' + gametime;
-        timerBg.update();
-    }
 
+    //GAME LOGIG METHODS
     function startGame() {
 
         if (isGameOver) {
@@ -161,6 +201,16 @@ function initGame() {
         scoreBg.text = '' + minesQty;
         scoreBg.update();
 
+        actionBtn.innerHTML = 'Pause Game';
+        actionBtn.className = 'buttonPause';
+        canvas.addEventListener('click', clickOnCellHandler, false);
+        timerId = setInterval(gameTimerHandler, 1000);
+        isGamePaused = false;
+        isGameStarted = true;
+        isGameComplete = false;
+    }
+
+    function resumeGame() {
         actionBtn.innerHTML = 'Pause Game';
         actionBtn.className = 'buttonPause';
         canvas.addEventListener('click', clickOnCellHandler, false);
@@ -186,7 +236,6 @@ function initGame() {
         isGamePaused = false;
         isGameOver = true;
 
-
         if (isGameComplete) {
             actionBtn.innerHTML = 'You Win, Play Again?';
             actionBtn.className = 'buttonWin';
@@ -211,7 +260,7 @@ function initGame() {
         }, this);
     }
 
-    function checkGameWon() {
+    function checkAllMinesSweeped() {
 
         var clearCellsQty = 0;
         var totalClearableCells = mapData.length - minesQty;
@@ -243,29 +292,6 @@ function initGame() {
         lines.forEach(function (line) {
             line.update();
         }, this);
-    }
-
-    function loadMapData() {
-        var map = new Image();
-        map.src = './maps/map1.jpg';
-        map.onload = function () {
-            context.drawImage(map, 0, 0, 10, 10);
-            map.style.display = 'none';
-            var mapImageData = context.getImageData(0, 0, 10, 10);
-            //console.log(mapData);
-
-            for (var i = 0; i < mapImageData.data.length; i += 4) {
-                //Read the first pixel and checks the value is close to 0.
-                if (mapImageData.data[i] < 10) {
-                    //console.log('Pixel ' + (i / 4) + ' is mine');
-                    mapData.push(1);
-                } else {
-                    mapData.push(0);
-                }
-            }
-            createCells();
-
-        };
     }
 
     function setNort(cell) {

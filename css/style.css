@@ -9,33 +9,21 @@ html, body {
 }
 
 .buttonPlay {
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 20px;
-    margin: 4px 2px;
-    cursor: pointer;
+    background-color:#1796ac;
 }
 
 .buttonPause {
-    background-color: red;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 20px;
-    margin: 4px 2px;
-    cursor: pointer;
+    background-color: #126e77;
 }
 
 .buttonOver {
-    background-color: orange;
+    background-color: #ee3344;
+}
+.buttonWin {
+    background-color:#1796ac;
+}
+
+.buttonPlay, .buttonPause, .buttonOver, .buttonWin {
     border: none;
     color: white;
     padding: 15px 32px;
@@ -46,15 +34,6 @@ html, body {
     margin: 4px 2px;
     cursor: pointer;
 }
-.buttonWin {
-    background-color:deepskyblue;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 20px;
-    margin: 4px 2px;
-    cursor: pointer;
+.buttonPlay:hover, .buttonPause:hover, .buttonOver:hover, .buttonWin:hover {
+    color: yellow;
 }
