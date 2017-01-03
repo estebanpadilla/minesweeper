@@ -5,6 +5,7 @@ function initGame() {
     var timerId = 0;
     var cells = [];
     var mapData = [];
+    var useImageDataForMap = false;
     var mapName = './maps/map1.jpg';
     var pool = [];
     var lines = [];
@@ -61,6 +62,8 @@ function initGame() {
     //Create all cells.
     function createCells() {
 
+        cells = [];
+
         x = 20;
         y = 120;
         // const cellQty = cols * rows;
@@ -68,7 +71,7 @@ function initGame() {
         for (var i = 0; i < mapData.length; i++) {
 
             var box = new Box({ x: x, y: y }, 40, 40, 'transparent', context);
-            pool.push(box);
+            //pool.push(box);
             var cell = new Cell(i, box, gameOver);
 
             if (mapData[i] == 1) {
@@ -119,28 +122,78 @@ function initGame() {
 
     //Loads map from image.
     function loadMapData() {
-        var map = new Image();
-        map.src = mapName;
-        map.onload = function () {
-            context.drawImage(map, 0, 0, 10, 10);
-            map.style.display = 'none';
-            var mapImageData = context.getImageData(0, 0, 10, 10);
-            //console.log(mapImageData);
+        mapData = [];
 
-            for (var i = 0; i < mapImageData.data.length; i += 4) {
-                //Read the first pixel and checks the value is close to 0.
-                if (mapImageData.data[i] < 10) {
-                    //console.log('Pixel ' + (i / 4) + ' is mine');
-                    mapData.push(1);
-                } else {
-                    mapData.push(0);
+        if (useImageDataForMap) {
+            var map = new Image();
+            map.src = mapName;
+            map.onload = function () {
+                context.drawImage(map, 0, 0, 10, 10);
+                map.style.display = 'none';
+                var mapImageData = context.getImageData(0, 0, 10, 10);
+                //console.log(mapImageData);
+
+                for (var i = 0; i < mapImageData.data.length; i += 4) {
+                    //Read the first pixel and checks the value is close to 0.
+                    if (mapImageData.data[i] < 10) {
+                        //console.log('Pixel ' + (i / 4) + ' is mine');
+                        mapData.push(1);
+                    } else {
+                        mapData.push(0);
+                    }
                 }
+                createCells();
+            };
+        } else {
+            minesQty = 15;
+            var minePositions = [];
+
+            for (var i = 0; i < 100; i++) {
+                mapData.push(0);
             }
-            createCells();
-        };
+
+            for (var j = 0; j < minesQty; j++) {
+                var num = getRandonNumber(minePositions);
+                minePositions.push(num);
+                //console.log(num);
+            }
+
+            for (var k = 0; k < minePositions.length; k++) {
+                mapData[minePositions[k]] = 1;
+            }
+
+        }
+
+        minesQty = 0;
+    }
+
+    function getRandonNumber(lastNumbers) {
+
+        var isSameNumber = false;
+        var ramdonNumber = Math.floor(getRandomArbitrary(0, 99));//get number here
+
+        for (var i = 0; i <= lastNumbers.length; i++) {
+            if (ramdonNumber == lastNumbers[i]) {
+                isSameNumber = true;
+                break;
+            }
+        }
+
+        if (isSameNumber) {
+            return getRandonNumber(lastNumbers);
+        } else {
+            return ramdonNumber;
+        }
+    }
+
+    function getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
     }
 
     loadMapData();
+    if (!useImageDataForMap) {
+        createCells();
+    }
     createUI();
     createGridLines();
 
@@ -249,6 +302,7 @@ function initGame() {
 
     }
 
+    //Check all mine to see if game map is clear.`
     function checkAllMinesSweeped() {
 
         var clearCellsQty = 0;
@@ -269,11 +323,20 @@ function initGame() {
     }
 
     function resetMap() {
+
         gametime = 0;
         timerBg.text = '' + gametime;
         timerBg.update();
         face.isHappy = true;
         face.update();
+
+        if (!useImageDataForMap) {
+            isGameOver = false;
+            isGameComplete = false;
+            loadMapData();
+            createCells();
+
+        }
 
         cells.forEach(function (cell) {
             cell.reset();
@@ -282,6 +345,7 @@ function initGame() {
         lines.forEach(function (line) {
             line.update();
         }, this);
+
     }
 
     function setNort(cell) {
