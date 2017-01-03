@@ -31,32 +31,35 @@ Box.prototype.update = function update() {
 }
 
 Box.prototype.render = function render() {
+
     this.context.beginPath();
     this.context.fillStyle = this.color;
     this.context.fillRect((this.position.x + 0.5), (this.position.y + 0.5), (this.width - 1), (this.height - 1));
-    this.context.closePath();
     this.context.fill();
+    this.context.closePath();
 
-    this.context.fillStyle = '#a0d4e3';
     this.context.font = this.font;
+
     if (this.isCell) {
+        this.context.fillStyle = celltextColor();
         this.context.textAlign = 'center';
         this.context.fillText(this.text, (this.position.x + 19), (this.position.y + 27));
     } else {
+        this.context.fillStyle = scoresTxtColor();
         this.context.textAlign = 'right';
         this.context.fillText(this.text, (this.position.x + 120), (this.position.y + 62));
     }
 
     if (this.showMine) {
 
-        this.context.fillStyle = '#473153';
+        this.context.fillStyle = mineColor();
         this.context.arc((this.position.x + this.width / 2), (this.position.y + this.height / 2), 8, 0, (Math.PI * 2), false);
         this.context.fill();
 
         this.context.lineWidth = 2;
         this.context.lineCap = 'round';
 
-        this.context.strokeStyle = '#473153';
+        this.context.strokeStyle = mineColor();
         this.context.beginPath();
         this.context.moveTo(this.position.x + 8, this.position.y + this.height / 2);
         this.context.lineTo(this.position.x + (this.width - 8), this.position.y + this.height / 2);
@@ -89,7 +92,7 @@ Box.prototype.render = function render() {
     if (this.showFlag) {
 
         this.context.beginPath();
-        this.context.strokeStyle = '#473153';
+        this.context.strokeStyle = mineColor();
         this.context.lineWidth = 3;
         this.context.moveTo(this.position.x + 16, this.position.y + (this.height - 11));
         this.context.lineTo(this.position.x + (this.width - 16), this.position.y + (this.height - 11));
@@ -111,8 +114,8 @@ Box.prototype.render = function render() {
         this.context.closePath();
 
         this.context.beginPath();
-        this.context.strokeStyle = '#ee3344'
-        this.context.fillStyle = '#ee3344'
+        this.context.strokeStyle = flagColor();
+        this.context.fillStyle = flagColor();
         this.context.lineCap = 'round';
         this.context.moveTo(this.position.x + (this.width / 2), this.position.y + 10);
         this.context.lineTo(this.position.x + 10, this.position.y + 15);
@@ -120,9 +123,6 @@ Box.prototype.render = function render() {
         this.context.closePath();
         this.context.fill();
         this.context.stroke();
-
-
-
     }
 }
 
@@ -164,7 +164,7 @@ Face.prototype.update = function update() {
 Face.prototype.render = function render() {
     this.context.beginPath();
     this.context.lineWidth = 3;
-    this.context.fillStyle = this.color;
+    this.context.fillStyle = this.getFaceColor();
     this.context.strokeStyle = 'black';
     this.context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
     this.context.fill();
@@ -272,6 +272,17 @@ Face.prototype.render = function render() {
         this.context.moveTo((this.position.x - 10), (this.position.y + 10));
         this.context.bezierCurveTo((this.position.x - 7), (this.position.y + 5), (this.position.x + 7), (this.position.y + 5), (this.position.x + 10), (this.position.y + 10));
         this.context.stroke();
+    }
+}
+
+Face.prototype.getFaceColor = function getFaceColor() {
+    if (this.isSuperHappy) {
+        return faceSuperHappyColor()
+    } else if (this.isHappy) {
+        return faceHappyColor();
+
+    } else {
+        return faceSadColor();
     }
 }
 

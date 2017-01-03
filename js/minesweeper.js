@@ -43,16 +43,16 @@ function initGame() {
         y = 20;
         height = 80;
 
-        scoreBg = new Box({ x: x, y: y }, 140, height, scoreBgColor, context);
+        scoreBg = new Box({ x: x, y: y }, 140, height, scoresBgColor(), context);
         scoreBg.text = '' + minesQty;
         scoreBg.font = '60px Lato'
         scoreBg.isCell = false;
         pool.push(scoreBg);
 
-        face = new Face({ x: 220, y: 60 }, 30, true, '#fff100', context);
+        face = new Face({ x: 220, y: 60 }, 30, true, faceHappyColor(), context);
         pool.push(face);
 
-        timerBg = new Box({ x: (width - 160), y: y }, 140, height, scoreBgColor, context);
+        timerBg = new Box({ x: (width - 160), y: y }, 140, height, scoresBgColor(), context);
         timerBg.text = '0';
         timerBg.font = '60px Lato';
         timerBg.isCell = false;
@@ -107,14 +107,14 @@ function initGame() {
         y = 120;
         x = 20
         for (var i = 0; i < (cols + 1); i++) {
-            const l = new Line({ x: x, y: y }, { x: (width - 20), y: y }, 2, '#e6e7e8', context)
+            const l = new Line({ x: x, y: y }, { x: (width - 20), y: y }, 2, linesColor(), context)
             y += 40;
             lines.push(l);
         }
 
         y = 120;
         for (var i = 0; i < (rows + 1); i++) {
-            const l = new Line({ x: x, y: y }, { x: x, y: 520 }, 2, '#e6e7e8', context)
+            const l = new Line({ x: x, y: y }, { x: x, y: 520 }, 2, linesColor(), context)
             x += 40;
             lines.push(l);
         }
@@ -145,7 +145,7 @@ function initGame() {
                 createCells();
             };
         } else {
-            minesQty = 15;
+            minesQty = 3;
             var minePositions = [];
 
             for (var i = 0; i < 100; i++) {
@@ -235,7 +235,10 @@ function initGame() {
     function activateCell(id) {
         var cell = cells[id];
         cell.activate();
-        checkAllMinesSweeped();
+
+        if (!cell.isMine) {
+            checkAllMinesSweeped();
+        }
     }
 
 
@@ -262,6 +265,7 @@ function initGame() {
         isGameComplete = false;
         isGameOver = true;
 
+        face.isSuperHappy = false;
         face.isHappy = false;
         face.update();
 
@@ -417,12 +421,12 @@ function initGame() {
 function createCanvas(x, y, width, height) {
     var canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
-    canvas.className = 'canvasStyle';
     canvas.width = width;
     canvas.height = height;
     canvas.style.position = 'absolute';
     canvas.style.left = '' + x + 'px';
     canvas.style.top = '' + y + 'px';
+    canvas.style.background = canvasColor();
     return canvas;
 }
 

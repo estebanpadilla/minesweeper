@@ -24,7 +24,7 @@ Cell.prototype.reset = function reset() {
 Cell.prototype.activate = function activate() {
 
     if (this.isMine) {
-        this.box.color = '#ee3344';
+        this.box.color = mineBgColor();
         this.box.update();
         this.gameOverListener();
         return;
