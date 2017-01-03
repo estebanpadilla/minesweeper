@@ -124,13 +124,12 @@ function initGame() {
             context.drawImage(map, 0, 0, 10, 10);
             map.style.display = 'none';
             var mapImageData = context.getImageData(0, 0, 10, 10);
-            console.log(map);
-            console.log(mapImageData);
+            //console.log(mapImageData);
 
             for (var i = 0; i < mapImageData.data.length; i += 4) {
                 //Read the first pixel and checks the value is close to 0.
                 if (mapImageData.data[i] < 10) {
-                    console.log('Pixel ' + (i / 4) + ' is mine');
+                    //console.log('Pixel ' + (i / 4) + ' is mine');
                     mapData.push(1);
                 } else {
                     mapData.push(0);
