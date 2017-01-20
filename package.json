@@ -4,7 +4,7 @@
   "description": "A simple html minesweeper game on the canvas.",
   "main": "server.js",
   "scripts": {
-    "start": "lite-server"
+    "start": "browser-sync start --s --f *.css, *.js, *.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/estebanpadilla/minesweeper#readme",
   "devDependencies": {
-    "lite-server": "^2.2.2"
+    "browser-sync": "^2.18.6"
   }
 }

@@ -280,7 +280,6 @@ Face.prototype.getFaceColor = function getFaceColor() {
         return faceSuperHappyColor()
     } else if (this.isHappy) {
         return faceHappyColor();
-
     } else {
         return faceSadColor();
     }

@@ -1,5 +1,13 @@
 window.addEventListener('load', initGame, false);
 function initGame() {
+
+    var canvas = null;
+    var context = null;
+    var scoreBg = null;
+    var face = null;
+    var timerBg = null;
+    var actionBtn = null;
+
     var minesQty = 0;
     var gametime = 0;
     var timerId = 0;
@@ -12,13 +20,6 @@ function initGame() {
     var cols = 10;
     var rows = 10;
     var scoreBgColor = '#1695ac';
-    var canvas = undefined;
-    var context = undefined;
-    var scoreBg = undefined;
-    var face = undefined;
-    var timerBg = undefined;
-    var actionBtn = undefined;
-
     var x = 20;
     var y = 20;
     var width = 440;
@@ -145,7 +146,7 @@ function initGame() {
                 createCells();
             };
         } else {
-            minesQty = 3;
+            minesQty = 15;
             var minePositions = [];
 
             for (var i = 0; i < 100; i++) {

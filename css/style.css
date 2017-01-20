@@ -11,4 +11,5 @@ html, body {
     text-decoration: none;
     display: inline-block;
     cursor: pointer;
+    outline: 0px;
 }
