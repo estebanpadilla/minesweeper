@@ -1,34 +1,34 @@
 window.addEventListener('load', initGame, false);
 function initGame() {
 
-    var canvas = null;
-    var context = null;
-    var scoreBg = null;
-    var face = null;
-    var timerBg = null;
-    var actionBtn = null;
+    let canvas = null;
+    let context = null;
+    let scoreBg = null;
+    let face = null;
+    let timerBg = null;
+    let actionBtn = null;
 
-    var minesQty = 0;
-    var gametime = 0;
-    var timerId = 0;
-    var cells = [];
-    var mapData = [];
-    var useImageDataForMap = false;
-    var mapName = './maps/map1.jpg';
-    var pool = [];
-    var lines = [];
-    var cols = 10;
-    var rows = 10;
-    var scoreBgColor = '#1695ac';
-    var x = 20;
-    var y = 20;
-    var width = 440;
-    var height = 540;
-    var isGameStarted = false;
+    let minesQty = 0;
+    let gametime = 0;
+    let timerId = 0;
+    let cells = [];
+    let mapData = [];
+    let useImageDataForMap = false;
+    let mapName = './maps/map1.jpg';
+    let pool = [];
+    let lines = [];
+    let cols = 10;
+    let rows = 10;
+    let scoreBgColor = '#1695ac';
+    let x = 20;
+    let y = 20;
+    let width = 440;
+    let height = 540;
+    let isGameStarted = false;
     // var isGamePaused = false;
-    var isGameOver = false;
-    var isGameComplete = false;
-    var isTimerOn = false;
+    let isGameOver = false;
+    let isGameComplete = false;
+    let isTimerOn = false;
 
     canvas = createCanvas(x, y, width, height);
     context = canvas.getContext('2d');
@@ -69,11 +69,11 @@ function initGame() {
         y = 120;
         // const cellQty = cols * rows;
 
-        for (var i = 0; i < mapData.length; i++) {
+        for (let i = 0; i < mapData.length; i++) {
 
-            var box = new Box({ x: x, y: y }, 40, 40, 'transparent', context);
+            let box = new Box({ x: x, y: y }, 40, 40, 'transparent', context);
             //pool.push(box);
-            var cell = new Cell(i, box, gameOver);
+            let cell = new Cell(i, box, gameOver);
 
             if (mapData[i] == 1) {
                 cell.isMine = true;
@@ -90,7 +90,7 @@ function initGame() {
         }
 
         //Set cells relationships.
-        for (var i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i++) {
             setNort(cells[i]);
             setSouth(cells[i]);
             setWest(cells[i]);
@@ -107,14 +107,14 @@ function initGame() {
         //Draw grid lines.
         y = 120;
         x = 20
-        for (var i = 0; i < (cols + 1); i++) {
+        for (let i = 0; i < (cols + 1); i++) {
             const l = new Line({ x: x, y: y }, { x: (width - 20), y: y }, 2, linesColor(), context)
             y += 40;
             lines.push(l);
         }
 
         y = 120;
-        for (var i = 0; i < (rows + 1); i++) {
+        for (let i = 0; i < (rows + 1); i++) {
             const l = new Line({ x: x, y: y }, { x: x, y: 520 }, 2, linesColor(), context)
             x += 40;
             lines.push(l);
@@ -126,15 +126,15 @@ function initGame() {
         mapData = [];
 
         if (useImageDataForMap) {
-            var map = new Image();
+            let map = new Image();
             map.src = mapName;
             map.onload = function () {
                 context.drawImage(map, 0, 0, 10, 10);
                 map.style.display = 'none';
-                var mapImageData = context.getImageData(0, 0, 10, 10);
+                let mapImageData = context.getImageData(0, 0, 10, 10);
                 //console.log(mapImageData);
 
-                for (var i = 0; i < mapImageData.data.length; i += 4) {
+                for (let i = 0; i < mapImageData.data.length; i += 4) {
                     //Read the first pixel and checks the value is close to 0.
                     if (mapImageData.data[i] < 10) {
                         //console.log('Pixel ' + (i / 4) + ' is mine');
@@ -147,19 +147,19 @@ function initGame() {
             };
         } else {
             minesQty = 15;
-            var minePositions = [];
+            let minePositions = [];
 
-            for (var i = 0; i < 100; i++) {
+            for (let i = 0; i < 100; i++) {
                 mapData.push(0);
             }
 
-            for (var j = 0; j < minesQty; j++) {
-                var num = getRandonNumber(minePositions);
+            for (let j = 0; j < minesQty; j++) {
+                let num = getRandonNumber(minePositions);
                 minePositions.push(num);
                 //console.log(num);
             }
 
-            for (var k = 0; k < minePositions.length; k++) {
+            for (let k = 0; k < minePositions.length; k++) {
                 mapData[minePositions[k]] = 1;
             }
 
@@ -170,10 +170,10 @@ function initGame() {
 
     function getRandonNumber(lastNumbers) {
 
-        var isSameNumber = false;
-        var ramdonNumber = Math.floor(getRandomArbitrary(0, 99));//get number here
+        let isSameNumber = false;
+        let ramdonNumber = Math.floor(getRandomArbitrary(0, 99));//get number here
 
-        for (var i = 0; i <= lastNumbers.length; i++) {
+        for (let i = 0; i <= lastNumbers.length; i++) {
             if (ramdonNumber == lastNumbers[i]) {
                 isSameNumber = true;
                 break;
@@ -226,22 +226,21 @@ function initGame() {
     //Find the cell using the mouse click position.
     function findCellByPosition(x, y) {
         if (x > 20 && x < 420 && y > 125 && y < 525) {
-            var colPosition = Math.round((x - 40) / 40);
-            var rowPosition = Math.floor((y - 125) / 40);
+            let colPosition = Math.round((x - 40) / 40);
+            let rowPosition = Math.floor((y - 125) / 40);
             const id = (rowPosition * 10) + colPosition;
             activateCell(id);
         }
     }
 
     function activateCell(id) {
-        var cell = cells[id];
+        let cell = cells[id];
         cell.activate();
 
         if (!cell.isMine) {
             checkAllMinesSweeped();
         }
     }
-
 
     //GAME LOGIG METHODS
     function startGame() {
@@ -310,9 +309,9 @@ function initGame() {
     //Check all mine to see if game map is clear.`
     function checkAllMinesSweeped() {
 
-        var clearCellsQty = 0;
-        var totalClearableCells = mapData.length - minesQty;
-        var totalClearedCells = 0;
+        let clearCellsQty = 0;
+        let totalClearableCells = mapData.length - minesQty;
+        let totalClearedCells = 0;
 
         cells.forEach(function (cell) {
             if (cell.isClear) {
@@ -420,7 +419,7 @@ function initGame() {
 }
 
 function createCanvas(x, y, width, height) {
-    var canvas = document.createElement('canvas');
+    let canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
     canvas.width = width;
     canvas.height = height;
@@ -432,7 +431,7 @@ function createCanvas(x, y, width, height) {
 }
 
 function createActionButton(x, y, width, height) {
-    var button = document.createElement('button');
+    let button = document.createElement('button');
     button.className = 'button';
     button.setAttribute('type', 'button');
     button.style.position = 'absolute';

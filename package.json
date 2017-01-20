@@ -2,9 +2,9 @@
   "name": "minesweeper",
   "version": "1.0.0",
   "description": "A simple html minesweeper game on the canvas.",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
-    "start": "browser-sync start --s --f *.css, *.js, *.js"
+    "start": "browser-sync start --s --f css/style.css, index.html, *.js"
   },
   "repository": {
     "type": "git",
@@ -12,7 +12,7 @@
   },
   "keywords": [],
   "author": "Esteban Padilla",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/estebanpadilla/minesweeper/issues"
   },
